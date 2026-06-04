@@ -61,6 +61,12 @@
             font-size: 14px;
             border-bottom: 1px dashed #e2e8f0;
         }
+        .error-msg {
+            text-align: center;
+            color: #c53030;
+            font-size: 14px;
+            margin: 16px 0;
+        }
         .info-list .row:last-child {
             border-bottom: none;
         }
@@ -154,9 +160,10 @@
             </div>
         </div>
 
+        <div id="failMessage" class="error-msg" style="display:none;"></div>
         <div class="actions">
             <a href="query.html" class="btn btn-secondary">← 返回查询</a>
-            <a href="certificate.jpg" target="_blank" class="btn btn-primary">查看大图</a>
+            <a id="viewBigImage" href="certificate.jpg" target="_blank" class="btn btn-primary">查看大图</a>
         </div>
     </div>
     <footer>国家专业技术人才职业资格查询系统 | 官方认证</footer>
@@ -168,15 +175,38 @@
         document.getElementById('errorMsg').style.display = 'block';
     }
 
-    // 从 URL 参数读取并展示查询信息
+    // 从 URL 参数读取并展示查询信息，校验是否为康小强
     (function () {
+        const expectedName = '康小强';
+        const expectedId = '141125199207210052';
+        const expectedCert = '20230000021';
+
         const params = new URLSearchParams(window.location.search);
         const name = params.get('name');
         const id = params.get('id');
         const cert = params.get('cert');
-        if (name) document.getElementById('vName').textContent = name;
-        if (id) document.getElementById('vId').textContent = id;
-        if (cert) document.getElementById('vCert').textContent = cert;
+        const failMessage = document.getElementById('failMessage');
+        const imageContainer = document.querySelector('.cert-image-container');
+        const viewBigImage = document.getElementById('viewBigImage');
+        const subText = document.querySelector('.result-header .sub');
+
+        if (name === expectedName && id === expectedId && cert === expectedCert) {
+            document.getElementById('vName').textContent = name;
+            document.getElementById('vId').textContent = id;
+            document.getElementById('vCert').textContent = cert;
+            subText.textContent = '✓ 证书信息已核验';
+            return;
+        }
+
+        subText.textContent = '✗ 查询失败，信息不匹配';
+        document.querySelector('.result-header h1').textContent = '查询失败';
+        failMessage.textContent = '抱歉，姓名、身份证号或证书编号与康小强不匹配，无法显示证书信息。';
+        failMessage.style.display = 'block';
+        imageContainer.style.display = 'none';
+        viewBigImage.style.display = 'none';
+        document.getElementById('vName').textContent = '--';
+        document.getElementById('vId').textContent = '--';
+        document.getElementById('vCert').textContent = '--';
     })();
 </script>
 </body>

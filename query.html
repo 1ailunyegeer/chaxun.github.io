@@ -130,6 +130,13 @@
             padding: 8px 12px;
             border-radius: 40px;
         }
+        .error-msg {
+            margin-top: 16px;
+            color: #c53030;
+            font-size: 14px;
+            text-align: center;
+            line-height: 1.5;
+        }
         footer {
             text-align: center;
             font-size: 11px;
@@ -160,6 +167,7 @@
         </div>
         <button class="query-btn" id="searchBtn">🔍 立即查询</button>
         <div class="demo-hint">※ 点击查询后，将显示您上传的证书原图</div>
+        <div id="errorMsg" class="error-msg"></div>
     </div>
 
     <footer>国家专业技术人才职业资格查询系统 | 官方认证</footer>
@@ -169,18 +177,33 @@
     const searchBtn = document.getElementById('searchBtn');
 
     function goToCertificatePage() {
-        // 收集输入并跳转到证书展示页
         const name = document.getElementById('fullName').value.trim();
         const id = document.getElementById('idNumber').value.trim();
         const cert = document.getElementById('certNumber').value.trim();
+        const errorMsg = document.getElementById('errorMsg');
+
+        const expectedName = '康小强';
+        const expectedId = '141125199207210052';
+        const expectedCert = '20230000021';
+
+        errorMsg.textContent = '';
+
+        if (!name || !id || !cert) {
+            errorMsg.textContent = '请填写姓名、身份证号和证书编号。';
+            return;
+        }
+
+        if (name !== expectedName || id !== expectedId || cert !== expectedCert) {
+            errorMsg.textContent = '查询失败：姓名、身份证号或证书编号与康小强不匹配。';
+            return;
+        }
 
         const params = new URLSearchParams();
-        if (name) params.set('name', name);
-        if (id) params.set('id', id);
-        if (cert) params.set('cert', cert);
+        params.set('name', name);
+        params.set('id', id);
+        params.set('cert', cert);
 
-        const query = params.toString();
-        window.location.href = 'certificate.html' + (query ? ('?' + query) : '');
+        window.location.href = 'certificate.html?' + params.toString();
     }
 
     searchBtn.addEventListener('click', goToCertificatePage);
