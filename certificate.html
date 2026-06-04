@@ -198,9 +198,9 @@
             return;
         }
 
-        subText.textContent = '✗ 查询失败，信息不匹配';
+        subText.textContent = '✗ 查询失败，无对应人员证书';
         document.querySelector('.result-header h1').textContent = '查询失败';
-        failMessage.textContent = '抱歉，姓名、身份证号或证书编号与康小强不匹配，无法显示证书信息。';
+        failMessage.textContent = '查询失败，无对应人员证书。';
         failMessage.style.display = 'block';
         imageContainer.style.display = 'none';
         viewBigImage.style.display = 'none';
